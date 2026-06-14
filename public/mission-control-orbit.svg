@@ -1,0 +1,15 @@
+<svg width="720" height="720" viewBox="0 0 720 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="720" height="720" rx="160" fill="#06111F"/>
+  <circle cx="360" cy="360" r="246" stroke="#8EF0FF" stroke-opacity="0.22" stroke-width="2" stroke-dasharray="12 18"/>
+  <circle cx="360" cy="360" r="178" stroke="#C2FF66" stroke-opacity="0.18" stroke-width="2" stroke-dasharray="8 14"/>
+  <circle cx="360" cy="360" r="104" fill="#0B1727" stroke="white" stroke-opacity="0.12" stroke-width="2"/>
+  <path d="M302 373C302 338.206 330.206 310 365 310H420V347H365C350.641 347 339 358.641 339 373C339 387.359 350.641 399 365 399H420V436H365C330.206 436 302 407.794 302 373Z" fill="#8EF0FF"/>
+  <path d="M420 310H446C480.794 310 509 338.206 509 373C509 407.794 480.794 436 446 436H420V399H446C460.359 399 472 387.359 472 373C472 358.641 460.359 347 446 347H420V310Z" fill="#C2FF66"/>
+  <circle cx="184" cy="258" r="34" fill="#8EF0FF"/>
+  <circle cx="548" cy="262" r="26" fill="#C2FF66"/>
+  <circle cx="230" cy="512" r="24" fill="#7DD3FC"/>
+  <circle cx="510" cy="520" r="31" fill="#FDE68A"/>
+  <path d="M184 258L360 360L548 262" stroke="white" stroke-opacity="0.16" stroke-width="3"/>
+  <path d="M230 512L360 360L510 520" stroke="white" stroke-opacity="0.16" stroke-width="3"/>
+  <text x="360" y="486" text-anchor="middle" fill="#E5F7FF" font-family="Arial, sans-serif" font-size="28" font-weight="700">MISSION OS</text>
+</svg>

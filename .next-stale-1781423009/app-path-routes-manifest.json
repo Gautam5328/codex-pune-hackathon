@@ -1,0 +1,9 @@
+{
+  "/api/missions/[id]/route": "/api/missions/[id]",
+  "/api/missions/[id]/start/route": "/api/missions/[id]/start",
+  "/_not-found/page": "/_not-found",
+  "/api/missions/route": "/api/missions",
+  "/mission/[id]/page": "/mission/[id]",
+  "/mission/new/page": "/mission/new",
+  "/page": "/"
+}

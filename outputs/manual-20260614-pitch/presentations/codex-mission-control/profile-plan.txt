@@ -1,0 +1,23 @@
+task mode: create
+primary deck-profile: engineering-platform
+secondary profile gates: product-platform, hackathon pitch
+required proof objects:
+- Problem framing slide
+- Product workflow map
+- Document Studio capability proof
+- Traceability/knowledge graph proof
+- AWS-style architecture diagram
+- Demo flow and judging alignment
+source/asset requirements:
+- Use local app/product facts from codex-mission-control.md and current implementation
+- Use hackathon skill event description and bounties as evaluation context
+- Avoid inventing official judging criteria where the skill lists none
+brand authenticity constraints:
+- No unofficial OpenAI or Codex logos
+- Use Mission Control visual language: dark navy, cyan, lime, amber, glass panels
+profile-specific QA gates:
+- Technical labels must remain concrete
+- Architecture connectors must be directional and legible
+- No generic "AI layer" boxes without specificity
+known missing inputs:
+- No official judging criteria are listed in the skill; deck uses hackathon direction and prize/bounty context instead
