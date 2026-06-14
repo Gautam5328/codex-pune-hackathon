@@ -1,5 +1,925 @@
 [
   {
+    "id": "mission_wnyx8fen",
+    "title": "Hospital Discharge Planning Cockpit (Next.js) — Workflow Coordination + Safe, Explainable AI Summaries",
+    "objective": "Build a hospital discharge planning cockpit that coordinates patient readiness, follow-up tasks, medication review, insurance blockers, care-team notes, and AI-generated discharge summaries.",
+    "repositoryContext": "Greenfield Next.js healthcare operations prototype with task workflows, timeline views, local persistence, care-team dashboards, and document-generation surfaces.",
+    "constraints": "Use synthetic patient data only. Emphasize workflow coordination, safety checks, privacy posture, and explainable recommendations.",
+    "status": "planned",
+    "tasks": [
+      {
+        "id": "task_f1aum0g5",
+        "title": "Define scope, user roles, and discharge workflow blueprint",
+        "description": "Align on target users (RN case manager, hospitalist, pharmacist, social worker, utilization review, unit clerk), key entities (patient, encounter, discharge plan, tasks, meds, insurance issues, notes, documents), and the end-to-end discharge workflow states (Admit → Inpatient → Discharge Planning → Ready Pending Items → Discharged). Produce a lightweight spec with acceptance criteria for cockpit views: readiness checklist, follow-up tasks, medication review, insurance blockers, care-team notes, and discharge summary generation.",
+        "owner": "planner",
+        "status": "queued",
+        "dependsOn": [],
+        "output": ""
+      },
+      {
+        "id": "task_lomaek4w",
+        "title": "Data model + synthetic dataset strategy",
+        "description": "Design TypeScript domain models and JSON fixtures for synthetic patients/encounters, including demographics, diagnoses/problems, labs/vitals (synthetic), medication list (home/inpatient/discharge), follow-up tasks, insurance prior-auth blocks, notes, and audit events. Establish a synthetic data policy: no real PHI, generate deterministic synthetic IDs, and include a clear banner in-app indicating synthetic/demo mode.",
+        "owner": "planner",
+        "status": "queued",
+        "dependsOn": [
+          "task_f1aum0g5"
+        ],
+        "output": ""
+      },
+      {
+        "id": "task_e0ut9zid",
+        "title": "Privacy & safety posture baseline (demo constraints, audit, disclaimers)",
+        "description": "Implement a privacy posture checklist for the prototype: synthetic-only guardrails, no external telemetry by default, redact/avoid free-text PHI patterns, and add in-app disclaimers that outputs are assistive and require clinician review. Add an audit log model for key actions (task completion, med reconciliation changes, summary generation) to support traceability.",
+        "owner": "builder",
+        "status": "queued",
+        "dependsOn": [
+          "task_lomaek4w"
+        ],
+        "output": ""
+      },
+      {
+        "id": "task_ht08a6hb",
+        "title": "Next.js app scaffolding and UI foundations",
+        "description": "Set up route structure and layout for cockpit: /dashboard, /patients/[id], /patients/[id]/timeline, /patients/[id]/discharge. Add shared components (patient header, status chips, task list, note composer, blockers panel). Ensure accessibility basics (keyboard navigation, ARIA for key controls) and consistent visual language for safety-critical alerts.",
+        "owner": "builder",
+        "status": "queued",
+        "dependsOn": [
+          "task_f1aum0g5",
+          "task_lomaek4w"
+        ],
+        "output": ""
+      },
+      {
+        "id": "task_egdj57y8",
+        "title": "Local persistence layer + state management",
+        "description": "Implement local persistence (IndexedDB or localStorage via a thin repository layer) for synthetic data edits: tasks, notes, med review decisions, blocker resolutions, and generated documents. Provide migration/versioning for stored schema, and add reset-to-fixtures capability for demos/testing.",
+        "owner": "builder",
+        "status": "queued",
+        "dependsOn": [
+          "task_lomaek4w",
+          "task_ht08a6hb"
+        ],
+        "output": ""
+      },
+      {
+        "id": "task_5qnxix8y",
+        "title": "Discharge readiness cockpit view (single-pane coordination)",
+        "description": "Build the primary discharge cockpit panel: readiness checklist (clinical stability, pending tests, mobility/OT, patient education, transportation), follow-up tasks (assigned owner + due date), medication review status, insurance blockers, and care-team notes. Include clear “not ready” reasons, required next actions, and a timeline snippet of recent events.",
+        "owner": "builder",
+        "status": "queued",
+        "dependsOn": [
+          "task_ht08a6hb",
+          "task_egdj57y8"
+        ],
+        "output": ""
+      },
+      {
+        "id": "task_t347p8yn",
+        "title": "Task workflows: assignment, dependencies, escalation, and handoffs",
+        "description": "Implement task creation and routing with owners, due times, status, and dependencies (e.g., prior auth must resolve before discharge). Add escalation rules (overdue/high-risk), quick handoff between roles, and a “today view” for care-team workload. Ensure tasks are explainable: show why a task exists and what evidence triggered it.",
+        "owner": "builder",
+        "status": "queued",
+        "dependsOn": [
+          "task_egdj57y8",
+          "task_5qnxix8y"
+        ],
+        "output": ""
+      },
+      {
+        "id": "task_984i7h7v",
+        "title": "Medication reconciliation & safety checks",
+        "description": "Create medication review surface: compare home vs inpatient vs proposed discharge meds, highlight deltas, duplications, dose changes, and allergy/interaction flags (rule-based on synthetic data). Add structured decisions (continue/stop/change) with rationale and required co-sign prompts. Gate discharge readiness on unresolved high-severity medication issues.",
+        "owner": "builder",
+        "status": "queued",
+        "dependsOn": [
+          "task_5qnxix8y"
+        ],
+        "output": ""
+      }
+    ],
+    "artifacts": [
+      {
+        "id": "artifact_cj0wn6cp",
+        "type": "plan",
+        "title": "Mission Plan",
+        "body": "This execution plan builds a practical discharge planning cockpit on a greenfield Next.js healthcare operations prototype with workflow-first coordination, explicit safety checks, and a synthetic-data-only privacy posture.\n\n1) First, lock workflow scope and roles so the cockpit reflects real discharge operations (case management, pharmacy, UR, social work, nursing, and physicians). 2) Establish a typed domain model and deterministic synthetic fixtures so all UI and AI features remain safely non-PHI. 3) Implement baseline privacy/safety guardrails early—disclaimers, redaction posture, and an audit log—so every downstream feature is traceable and demo-safe.\n\n4–6) Build the app skeleton, local persistence, and the core cockpit view as the single source of truth for patient readiness, tasks, meds, blockers, and notes. 7–10) Layer in operational workflows: task routing with dependencies and escalation, medication reconciliation with rule-based safety flags, insurance blocker resolution, structured care-team notes, and a timeline that makes every recommendation explainable via evidence links.\n\n11–12) Add AI-assisted discharge summaries only after structured data, notes, and timeline evidence exist. The AI output is constrained to available data, cites sources, highlights missing information, and requires clinician review. Safety gating then enforces readiness rules and hard stops (or documented overrides) to prevent premature discharge actions.\n\n13–14) Close with tests, scenario-based demo playbooks, performance tuning, and operational guardrails (feature flags, local-only logs, synthetic-mode indicators). The end result is an execution-oriented cockpit that coordinates discharge work across disciplines, surfaces blockers early, makes safety-critical decisions transparent, and keeps the prototype aligned with privacy-by-design using synthetic data exclusively.",
+        "createdAt": "2026-06-14T11:36:45.310Z"
+      }
+    ],
+    "logs": [
+      {
+        "id": "log_uz5czy5x",
+        "level": "success",
+        "message": "Mission plan generated successfully.",
+        "timestamp": "2026-06-14T11:36:45.310Z"
+      }
+    ],
+    "createdAt": "2026-06-14T11:36:15.972Z",
+    "updatedAt": "2026-06-14T11:36:15.972Z"
+  },
+  {
+    "id": "mission_vnfvnlei",
+    "title": "Customer Support Operations Command Center (Codex Mission Control)",
+    "objective": "Build a customer support operations command center with omnichannel inbox triage, SLA breach prediction, AI ticket summaries, escalation routing, agent workload analytics, and executive health reports.",
+    "repositoryContext": "Greenfield Next.js app with local persistence, API routes, dashboard cards, ticket timelines, document exports, and a future integration path for Zendesk, Slack, and email systems.",
+    "constraints": "Prioritize visual operations clarity, SLA risk detection, and role-specific dashboards. Keep integrations mocked but architecture-ready for production.",
+    "status": "completed",
+    "tasks": [
+      {
+        "id": "task_bsdhgsex",
+        "title": "Confirm personas, workflows, and SLA rules (Ops-first product spec)",
+        "description": "Define role-specific goals and primary flows for Support Agent, Team Lead, Ops Manager, and Executive. Specify ticket lifecycle states, SLA definitions (first response, next response, resolution), breach thresholds, business hours handling (simple v1), priority mapping, and the set of KPIs for dashboards (risk queue, backlog aging, workload, escalation rate, SLA attainment). Output a short spec plus sample data requirements to drive UI and prediction logic.",
+        "owner": "planner",
+        "status": "completed",
+        "dependsOn": [],
+        "output": "Completed ops-first product spec: defined 4 personas with role-specific dashboards; specified inbox triage, escalation/routing, and weekly executive reporting workflows; documented ticket lifecycle states/events; defined SLA timers (first/next/resolve) with pause/applicability rules, priority thresholds, and simple business-hours handling; set priority-mapping heuristics with auditability; outlined KPIs/cards and sample data schema + seed scenarios; included v1 AI summary fields and rule-based SLA risk scoring with reason codes."
+      },
+      {
+        "id": "task_3c2aszp4",
+        "title": "System architecture & folder structure (greenfield Next.js)",
+        "description": "Set up Next.js (App Router) conventions: /app routes, /app/api endpoints, /lib domain modules, /components UI, /types. Decide local persistence approach (SQLite with Prisma or file-based JSON store) and define boundaries: domain layer (tickets, sla, routing, analytics), service layer (mock connectors), API layer, UI. Ensure architecture is integration-ready with adapter interfaces for Zendesk/Slack/Email.",
+        "owner": "planner",
+        "status": "completed",
+        "dependsOn": [
+          "task_bsdhgsex"
+        ],
+        "output": "Designed a greenfield Next.js (App Router) architecture using hexagonal layering with SQLite+Prisma persistence, clear domain/application/ports/infra boundaries, persona-based dashboard routes, and a v1 API surface for tickets, events, triage, routing, SLA risk, analytics, reports, and exports. Defined repository ports and mock adapters (Zendesk/Slack/Email), plus a Prisma schema outline emphasizing events as source of truth with SLA snapshots as cache."
+      },
+      {
+        "id": "task_blebc7nc",
+        "title": "Data model: tickets, events timeline, agents, channels, SLAs, escalations",
+        "description": "Design core entities: Ticket (id, subject, channel, requester, status, priority, tags), TicketEvent (timestamp, type, actor, payload), SLAState (targets, dueAt, breached flags), Escalation (reason, route, owner), Agent (skills, capacity, timezone), WorkloadSnapshot. Implement TypeScript types and persistence schema. Include event-sourcing-ish timeline to power auditability and exports.",
+        "owner": "builder",
+        "status": "completed",
+        "dependsOn": [
+          "task_3c2aszp4"
+        ],
+        "output": "Completed data model for tickets, event timeline, agents, channels, SLAs, escalations, and workload snapshots. Defined TypeScript domain types, repository ports for hexagonal architecture, and a Prisma/SQLite schema using JSON-string fields plus indexed scalar fields. Event stream is source-of-truth; Ticket stores an operational snapshot with cached SLA/escalation state for fast filtering and dashboards."
+      },
+      {
+        "id": "task_yefgdw3j",
+        "title": "Local persistence + seed generator (realistic sample workload)",
+        "description": "Implement local persistence layer with CRUD for tickets and events, plus a deterministic seed script that creates multi-channel tickets with varying age, priority, statuses, and SLA timers. Include agents and capacity settings. Seed data should intentionally include near-breach and breached cases to validate the risk UI.",
+        "owner": "builder",
+        "status": "completed",
+        "dependsOn": [
+          "task_blebc7nc"
+        ],
+        "output": "Implemented a local persistence design (SQLite + Prisma) with repository adapters for tickets/events/agents/settings/SLA policies, plus a deterministic seed generator that produces a realistic multi-channel dataset (120 tickets, ~700–1100 events) including guaranteed near-breach and breached SLA scenarios and precomputed risk scoring fields for UI validation."
+      },
+      {
+        "id": "task_s7x22zgc",
+        "title": "Mock integration adapters (Zendesk/Slack/Email) with production-ready interfaces",
+        "description": "Create connector interfaces (e.g., TicketSourceAdapter, NotificationAdapter) and implement mocked adapters that read/write local persistence. Include stubs for future OAuth secrets/config. Provide a unified ingest pathway so that swapping to real Zendesk/Slack/email later is limited to adapter implementations.",
+        "owner": "builder",
+        "status": "completed",
+        "dependsOn": [
+          "task_blebc7nc",
+          "task_yefgdw3j"
+        ],
+        "output": "Defined production-ready integration ports for ticket ingest/sync and notifications; implemented mock Zendesk/Slack/Email adapters backed by local persistence; added unified ingest orchestration (service + POST /api/ingest) with cursors, idempotent dedupe keys, and per-integration metrics; introduced IntegrationRegistry to switch mock/prod via config; updated Prisma models for integration connections/cursors and notification outbox; added env placeholders for future secrets management via IntegrationSecretsProvider."
+      },
+      {
+        "id": "task_6g4epp96",
+        "title": "SLA engine (timers, business hours v1, breach + risk scoring)",
+        "description": "Implement SLA computation that derives dueAt for first response/next response/resolution based on priority and business hours policy (v1: configurable working hours, skip weekends; keep logic modular). Add risk scoring (0-100) using time-to-due ratio, backlog/agent load factor, and status/channel modifiers. Output per-ticket SLAState and riskReason codes for UI explainability.",
+        "owner": "builder",
+        "status": "completed",
+        "dependsOn": [
+          "task_bsdhgsex",
+          "task_blebc7nc",
+          "task_yefgdw3j"
+        ],
+        "output": "Task 5 (SLA engine) is conceptually complete: specified a modular, pure-function SLA computation engine (business-hours v1: working hours + skip weekends) to compute dueAt/remainingMs for first response, next response, and resolution. Produces per-ticket TicketSlaState (timers, breached flags, overall status) plus a 0–100 explainable risk score with reason codes (time-to-due ratio, backlog/agent load, status/channel/priority modifiers). Integrations are mocked; architecture is production-ready with planned caching and recompute triggers."
+      },
+      {
+        "id": "task_iwh2cfyv",
+        "title": "Escalation routing rules engine (team lead / on-call / specialized queues)",
+        "description": "Implement routing that assigns tickets to agents or escalation queues based on: priority, risk score, customer tier (mock), tags (billing/bug/outage), and current agent capacity. Provide deterministic routing for repeatability plus override actions (manual escalate, reassign). Track routing decisions as timeline events for audit.",
+        "owner": "builder",
+        "status": "completed",
+        "dependsOn": [
+          "task_blebc7nc",
+          "task_6g4epp96"
+        ],
+        "output": "Designed and specified a deterministic escalation routing rules engine for ticket assignment across agents, queues, on-call schedules, and team leads. Routing uses normalized input hashing + seeded deterministic selection, applies capacity/skill filters, supports manual override (escalate/reassign), and emits audit-grade timeline events capturing inputsHash, matched rule, selected target, alternatives, and reason codes. Includes Policy v1 with 6 ordered rules (outage/oncall, enterprise escalation, billing/bug specialists, and risk-based triage), API routes for auto/dry-run routing and overrides, persistence schema deltas, and UI timeline/action hooks with idempotency via inputsHash."
+      },
+      {
+        "id": "task_92ceesuj",
+        "title": "AI ticket summaries (mock LLM now, pluggable later) + suggested next actions",
+        "description": "Create a summarization service interface (Summarizer) with a mocked implementation that produces: short summary, key entities, sentiment, recommended response type, and suggested escalation reason. Store summaries with versioning and timestamps. Ensure later swap to real LLM is confined to provider module; keep prompts/config centralized.",
+        "owner": "builder",
+        "status": "completed",
+        "dependsOn": [
+          "task_blebc7nc",
+          "task_yefgdw3j"
+        ],
+        "output": "Task 7 defines a pluggable AI ticket summarization system: a Summarizer port/interface with a deterministic mock provider (heuristics for entities, sentiment, response type, escalation reason, and 2–4 next actions). A SummarizeTicket use case builds canonical inputs from ticket + recent events, computes inputsHash, calls the provider, and persists a versioned TicketSummary record with provider metadata (name/model/promptVersion) and timestamps. Prompts/config are centralized to isolate swapping to a real LLM behind the provider registry. API routes provide GET latest+history and POST to (re)generate summaries with idempotency (inputsHash), optional force, and dryRun, plus an audit timeline event TICKET_SUMMARY_GENERATED."
+      }
+    ],
+    "artifacts": [
+      {
+        "id": "artifact_rmhqha55",
+        "type": "plan",
+        "title": "Mission Plan",
+        "body": "This execution plan builds an operations-first command center focused on clarity, SLA risk detection, and role-specific decisioning. The work starts by locking down the operational spec (roles, SLAs, KPIs) so every view and metric has an explicit purpose. We then establish an integration-ready architecture in a greenfield Next.js app, with a domain layer for tickets, SLA computation, routing, and analytics, and adapter interfaces that keep Zendesk/Slack/email mocked but swappable.\n\nA local persistence layer and realistic seed generator come early to ensure every UI and algorithm can be validated against near-breach and breached scenarios. The SLA engine is implemented as a first-class module producing explainable SLA state and risk scoring per ticket; this feeds the triage UI (risk-sorted inbox), ticket detail explainability, and breach prediction signals. Escalation routing is rule-driven and capacity-aware, with every decision recorded as a timeline event to support audits and exports.\n\nOn the UI side, the plan prioritizes a dense, readable operations layout with reusable components for SLA countdowns, risk badges, and queue tables. The omnichannel inbox is the primary control surface for triage and quick actions; the ticket detail page is the operational workspace with timeline, AI summary, and escalation controls. Role dashboards are delivered explicitly: agents get a focus queue, leads/ops get workload and rebalancing analytics, and executives get health reporting with trends and an auto-generated narrative.\n\nFinally, exports and quality gates ensure the system is usable in real operations: audits need transcripts and routing history, execs need report downloads, and engineering needs tests and observability hooks. The last hardening step ensures configuration, adapters, and auth placeholders make the repository production-ready in structure even while integrations remain mocked.",
+        "createdAt": "2026-06-14T11:30:42.675Z"
+      },
+      {
+        "id": "artifact_q666pklx",
+        "type": "summary",
+        "title": "Ops-first personas, workflows, and SLA rules (v1)",
+        "body": "Personas: Support Agent, Team Lead, Ops Manager, Executive. Workflows: inbox triage (risk-first), escalation/routing (channel/priority/product/tier rules), weekly executive reporting. Ticket lifecycle: new/open/pending*/on_hold/solved/closed with tracked events (created, messages, status/assignment/priority/tag changes, escalation, SLA warning/breach). SLA: first/next/resolve timers with pause/applicability; priority thresholds P0-P3; warning window 30m; business hours mon-fri 09:00-17:00 org timezone (no holidays v1). Priority mapping: VIP minimum P1, outage/security => P0, slack+\"urgent\" upgrades, defaults P2/P3; manual override audited. KPIs: risk queue, backlog aging, workload, escalation rate, SLA attainment. AI v1: deterministic ticket summary fields + rules/heuristics risk score with reason codes and suggested actions. Sample data: Organization/User/Team/Customer/Ticket/TicketEvent/SLAStatus plus derived UI fields and 40-ticket seed distribution with required scenarios.",
+        "createdAt": "2026-06-14T11:36:45.388Z"
+      },
+      {
+        "id": "artifact_9lpp5nih",
+        "type": "analysis",
+        "title": "SLA and risk model notes (v1 assumptions)",
+        "body": "Next-response SLA resets on each new inbound after an agent reply; pauses in pending_internal/on_hold; does not apply in pending_customer/solved/closed. Resolution pauses in pending_customer/pending_internal/on_hold and stops at solved. Business-hours mode counts time only within schedule; tickets created after hours start next open; timers pause at close. Risk score is rules-based using time_to_breach, priority weight, inactivity, and unassigned status; always expose reason codes and raw timers to preserve trust.",
+        "createdAt": "2026-06-14T11:36:45.388Z"
+      },
+      {
+        "id": "artifact_vmnnlgcd",
+        "type": "summary",
+        "title": "Architecture decisions",
+        "body": "Next.js App Router with Route Handlers (app/api/*/route.ts). Persistence: SQLite + Prisma (strong for timelines/events and analytics; easy migration to Postgres; deterministic local dev). Hexagonal layering: domain (pure), application (orchestration), ports (interfaces), infra (Prisma + mock connectors), API (validation/auth stub + service calls), UI (server components for read-heavy, client for interactive).",
+        "createdAt": "2026-06-14T11:37:30.160Z"
+      },
+      {
+        "id": "artifact_it7djqt2",
+        "type": "analysis",
+        "title": "Proposed repository structure",
+        "body": "Root: app/, components/, lib/, types/, prisma/, scripts/, public/. app includes persona dashboards and ticket/report pages; app/api includes tickets, events, triage, routing, SLA risk, analytics, reports, exports, connector test/sync routes. lib split into domain (tickets, events, SLA, routing, analytics), application services, ports, infra (Prisma repos + mock adapters + export), and server (guards/validation/logging).",
+        "createdAt": "2026-06-14T11:37:30.160Z"
+      },
+      {
+        "id": "artifact_qulyhqsb",
+        "type": "review",
+        "title": "Key interfaces and invariants",
+        "body": "Ports: TicketRepository (list/get/create/update/assign/setStatus/addTags), EventRepository (append/listByTicket/listByTimeRange), ConnectorZendesk/Slack/Email methods as specified. Domain invariants: all state transitions produce immutable events; SLA timers derived from events+policy (snapshots allowed but reproducible); risk scoring returns numeric score + reason codes for auditability.",
+        "createdAt": "2026-06-14T11:37:30.160Z"
+      },
+      {
+        "id": "artifact_yjmvf2b5",
+        "type": "analysis",
+        "title": "API contract sketch (v1)",
+        "body": "Auth: stub role header (x-role: ops|agent|manager|exec) for v1; replace with NextAuth later. Response shape: {data, error?, meta?}. Endpoints: GET /api/tickets (filters + pagination), GET /api/tickets/:id (detail + computed SLA snapshot + AI summary placeholder), POST /api/tickets/:id/events (append event; recompute SLA/risk), POST /api/triage (priority+policy+risk without persistence), GET /api/analytics/workload, GET /api/reports/executive.",
+        "createdAt": "2026-06-14T11:37:30.160Z"
+      },
+      {
+        "id": "artifact_uewirkzi",
+        "type": "analysis",
+        "title": "Prisma schema outline",
+        "body": "Models: Ticket, TicketEvent (payloadJson), SlaSnapshot (riskScore + riskReasonsJson), Agent; optional Worklog/AssignmentHistory (v1.1 via events only). Notes: events as source of truth; snapshots for fast dashboards; payloadJson flexible now with path to normalization later.",
+        "createdAt": "2026-06-14T11:37:30.160Z"
+      },
+      {
+        "id": "artifact_p9qjifsx",
+        "type": "analysis",
+        "title": "Domain entities and event timeline (TypeScript)",
+        "body": "File: src/domain/tickets/types.ts\nDefines Ticket (snapshot + cached SLA/escalation/AI), TicketEvent (monotonic per-ticket version + idempotencyKey), SLAState (targets/timers/risk), EscalationState/Route, Agent (skills/capacity/timezone), and WorkloadSnapshot metrics.",
+        "createdAt": "2026-06-14T11:38:21.253Z"
+      },
+      {
+        "id": "artifact_pktq7owb",
+        "type": "execution",
+        "title": "Repository ports (TypeScript persistence interfaces)",
+        "body": "File: src/domain/tickets/persistence.ts\nDefines TicketRepository, TicketEventRepository (append + list + latest version), AgentRepository (upsert + list), WorkloadSnapshotRepository (create + latest). Intended for Prisma adapter + mocks.",
+        "createdAt": "2026-06-14T11:38:21.253Z"
+      },
+      {
+        "id": "artifact_t2gnln1u",
+        "type": "execution",
+        "title": "Prisma schema (SQLite-ready)",
+        "body": "File: prisma/schema.prisma\nModels: Ticket, TicketEvent, Agent, WorkloadSnapshot. Uses JSON-string columns (tagsJson/slaJson/escalationJson/aiJson etc.) with scalar indexed fields for operational queries (status/priority/assignee/group/channel/slaRiskLevel/slaDueAtNearest). Enforces unique(ticketId, version) for deterministic event ordering and supports idempotencyKey indexing.",
+        "createdAt": "2026-06-14T11:38:21.253Z"
+      },
+      {
+        "id": "artifact_3ler1eqn",
+        "type": "summary",
+        "title": "Modeling decisions (notes)",
+        "body": "File: docs/data-model-notes.md\nEvents are source-of-truth; Ticket stores operational snapshot for fast UI filtering. SLA snapshot cached and recomputable from events + rules. Tags stored as JSON for SQLite simplicity (plan normalization later). TicketEvent ordering via per-ticket monotonic version. IdempotencyKey supports safe retries. WorkloadSnapshot enables precomputed dashboard/report metrics. Escalations cached on Ticket and recorded as events for history.",
+        "createdAt": "2026-06-14T11:38:21.253Z"
+      },
+      {
+        "id": "artifact_dars1zdv",
+        "type": "analysis",
+        "title": "Persistence model + operational indexing",
+        "body": "Prisma/SQLite schema includes Ticket, TicketEvent, Agent, OpsSettings (singleton), and SlaPolicy. Tickets cache SLA due/breach timestamps and risk fields for fast UI filtering; TicketEvent remains source-of-truth. Key indexes: Ticket(status, priority, channel, lastActivityAt, assigneeAgentId, queue) and SLA due timestamps; TicketEvent(ticketId+at, type). JSON blobs stored as strings; parse/serialize in repositories.",
+        "createdAt": "2026-06-14T11:39:10.578Z"
+      },
+      {
+        "id": "artifact_53ata9ku",
+        "type": "execution",
+        "title": "Repository adapters (Prisma)",
+        "body": "Prisma client singleton + transaction helper. TicketRepository supports CRUD, list with SLA risk window filters, addEvent with snapshot reducer (applyEventToSnapshot), timeline reads, and bulk upsert for seeding with deterministic IDs. AgentRepository supports list/create/update/get. SettingsRepository supports singleton OpsSettings and SLA policy CRUD/upsert.",
+        "createdAt": "2026-06-14T11:39:10.578Z"
+      },
+      {
+        "id": "artifact_4jb1s4oh",
+        "type": "execution",
+        "title": "Deterministic seed generator (realistic workload + SLA edge cases)",
+        "body": "Seed script (`npm run seed`, `tsx src/seed/seed.ts`) uses seeded PRNG (default SEED=42) and stable IDs. Generates: 1 SLA policy set (P1/P2/P3 timers, business hours + pause rules), Ops settings (routing, capacity model, escalation targets), 8 agents (2 teams, capacity weights/timezones/skills, on-call lead), 120 tickets across email/web/chat/slack over 14 days, and 3–12 events per ticket (created, inbound, triage, assignment, replies, status changes, notes, escalations, SLA checkpoints). Injected scenarios: first-response imminent breach (6), first-response breached (4), next-response near breach (8), resolve breached (5), paused SLA pending (10). Populates Ticket.riskScore and riskReasons (e.g., FIRST_RESPONSE_DUE_SOON/BREACHED, NEXT_RESPONSE_DUE_SOON, RESOLVE_BREACHED, HIGH_VALUE_ACCOUNT, UNASSIGNED_P1). Outputs summary counts and writes to SQLite via Prisma.",
+        "createdAt": "2026-06-14T11:39:10.578Z"
+      },
+      {
+        "id": "artifact_pn3t9p05",
+        "type": "review",
+        "title": "Verification queries + acceptance coverage",
+        "body": "Expected entities: SlaPolicy=1, OpsSettings=1, Agent=8, Ticket=120, TicketEvent≈700–1100. Sample checks: (1) status in new/open AND first-response due <= now+10m AND not breached => >=6. (2) first-response breached not null => >=4. (3) status=pending AND riskScore>=70 => 0 (paused SLA not risky). Acceptance checklist indicates CRUD for tickets/events/agents/settings+SLA, deterministic seed, multichannel realism, near-breach/breach cases, seeded capacity, and integration-ready architecture.",
+        "createdAt": "2026-06-14T11:39:10.578Z"
+      },
+      {
+        "id": "artifact_eue80sfb",
+        "type": "analysis",
+        "title": "Integration ports (core interfaces and types)",
+        "body": "Path: src/core/ports/integrations.ts\nInterfaces: TicketSourceAdapter, NotificationAdapter, IntegrationConfigRepository, IntegrationSecretsProvider\nTypes: ExternalTicketRef, ExternalTicket, ExternalTicketEvent, IngestCursor, IngestResult, NotifyMessage, NotifyResult, IntegrationName, IntegrationAuthType, IntegrationConnectionState\nNotes: TicketSourceAdapter exposes health(), listChanges(cursor), fetchTicket(ref), ack(cursor) to support at-least-once ingest; NotificationAdapter exposes health(), send(message) for slack/email targets; secrets via IntegrationSecretsProvider (no tokens in DB); async structured results with error codes for retries/dashboards.",
+        "createdAt": "2026-06-14T11:40:01.236Z"
+      },
+      {
+        "id": "artifact_lw48pa8d",
+        "type": "analysis",
+        "title": "Unified ingest orchestration + idempotency strategy",
+        "body": "Path: src/core/application/ingest/IngestTicketsService.ts\nResponsibilities: orchestrate ingest across enabled sources; normalize external payloads into domain Ticket + TicketEvent stream; upsert snapshots and append events idempotently; update per-connection cursor; emit ingest metrics (counts/lag/errors).\nIdempotency: dedupeKey = `${integration}:${externalTicketId}:${externalEventId||externalUpdatedAt}` stored on events (or ingest log). If dedupeKey exists, skip event write; update snapshot only if newer/different.",
+        "createdAt": "2026-06-14T11:40:01.236Z"
+      },
+      {
+        "id": "artifact_qbb45yad",
+        "type": "execution",
+        "title": "Mock adapters (Zendesk + Slack + Email)",
+        "body": "Zendesk mock (src/infra/integrations/mock/MockZendeskAdapter.ts): Prisma-backed seeded tickets; listChanges after cursor.since with deterministic ordering; fetchTicket returns normalized ExternalTicket (channel='zendesk'); ack persists cursor; health {ok:true, mode:'mock', latencyMs:5}; oauth2 config stub with optional strict token presence validation.\nSlack mock notifications (src/infra/integrations/mock/MockSlackNotificationAdapter.ts): writes NotificationOutbox with destination, blocks/text, correlationId; status='sent'; health {ok:true, mode:'mock'}; expects slack.botToken via secrets provider for real adapter.\nEmail mock notifications (src/infra/integrations/mock/MockEmailNotificationAdapter.ts): writes outbox with to/cc/bcc, subject, html/text; transitions queued->sent; providerMessageId UUID; health {ok:true, mode:'mock'}; aligns with SMTP/SendGrid style fields.",
+        "createdAt": "2026-06-14T11:40:01.236Z"
+      },
+      {
+        "id": "artifact_9mk697mi",
+        "type": "execution",
+        "title": "Integration registry + ingest API route",
+        "body": "Integration registry (src/infra/integrations/IntegrationRegistry.ts): central wiring by IntegrationName; INTEGRATIONS_MODE=mock returns mock adapters; INTEGRATIONS_MODE=prod returns real placeholders and fails fast if secrets missing; exports getTicketSourceAdapters(), getNotificationAdapters().\nAPI route (src/app/api/ingest/route.ts): POST body supports integrationNames?, dryRun?, maxItems?; response includes ingestRunId, perIntegration IngestResult[], and totals (ticketsUpserted/eventsAppended/deduped/errors); used by mission-control dashboard and scheduled/manual runs.",
+        "createdAt": "2026-06-14T11:40:01.236Z"
+      },
+      {
+        "id": "artifact_08pvqrys",
+        "type": "review",
+        "title": "Data model and config deltas",
+        "body": "Prisma schema delta: new models IntegrationConnection (name/authType/state/accountLabel/metadataJson/lastHealthAt/lastError/etc), IntegrationCursor (cursorJson per connection), NotificationOutbox (provider, destination, payloadJson, status, error, correlationId, timestamps). Updated models: TicketEvent adds externalSource, externalEventId, dedupeKey (indexed); Ticket adds externalSource, externalTicketId, externalUrl.\n.env.example delta: INTEGRATIONS_MODE plus placeholders for Zendesk/Slack OAuth and Email SMTP; secrets accessed via IntegrationSecretsProvider to enable env/vault swaps.",
+        "createdAt": "2026-06-14T11:40:01.236Z"
+      },
+      {
+        "id": "artifact_v3lxa7pz",
+        "type": "summary",
+        "title": "Operational outputs enabled",
+        "body": "Dashboards: integration health (state, lastHealthAt, lastError), ingest status (last run totals, lag per integration, errors), notification outbox audit (queued/sent/failed).\nMock flows: Zendesk(mock) -> IngestTicketsService -> Ticket/TicketEvent; future escalation workflow -> NotificationAdapter -> NotificationOutbox.",
+        "createdAt": "2026-06-14T11:40:01.236Z"
+      },
+      {
+        "id": "artifact_kfz59eml",
+        "type": "analysis",
+        "title": "Domain module spec: SLA engine pure functions",
+        "body": "Path: src/domain/sla/SlaEngine.ts\nExports:\n- computeTicketSlaState(input: ComputeSlaInput): TicketSlaState\n- computeSlaDueAt(startedAt: string, targetMs: number, policy: BusinessHoursPolicyV1): string\n- computeRemainingMs(now: string, dueAt: string, policy: BusinessHoursPolicyV1): number\n- computeRiskScore(ctx: RiskContext): { riskScore: number; riskReasons: RiskReasonCode[] }\nNotes: Pure functions; no DB access. Time arithmetic in ms with ISO timestamps. Policy/thresholds injected.",
+        "createdAt": "2026-06-14T11:40:49.023Z"
+      },
+      {
+        "id": "artifact_9lgk9scp",
+        "type": "analysis",
+        "title": "Policy + types schema: BusinessHoursPolicyV1, TicketSlaState, RiskReasonCode",
+        "body": "Path: src/domain/sla/types.ts\nBusinessHoursPolicyV1: timezone (IANA), workDays default [1..5], workStart '09:00', workEnd '17:00', skipWeekends true, holidays ISO dates optional.\nTicketSlaState: policyVersion 'bh_v1'; timers (firstResponse/nextResponse/resolution with startedAt/dueAt/breached/remainingMs); overall (breached, soonestDueAt, soonestTimer, status ok|at_risk|breached); risk (score 0-100, reasons RiskReasonCode[]).\nRiskReasonCode includes: TIME_TO_DUE_CRITICAL/WARNING, ALREADY_BREACHED, UNASSIGNED, BACKLOG_HIGH, AGENT_LOAD_HIGH, CHANNEL_LIVE_CHAT, CHANNEL_SOCIAL, STATUS_PENDING_CUSTOMER, STATUS_ON_HOLD, PRIORITY_P0_BOOST, PRIORITY_P1_BOOST, AFTER_HOURS_START.",
+        "createdAt": "2026-06-14T11:40:49.023Z"
+      },
+      {
+        "id": "artifact_vh349tzq",
+        "type": "execution",
+        "title": "Application service spec: RecomputeSlaForTicket",
+        "body": "Path: src/application/tickets/RecomputeSlaForTicket.ts\nInputs: ticketId, now (optional), policyId (optional).\nReads: ticket snapshot; ticket events timeline; SLA policy + targets; agent workload snapshot (optional with defaults).\nWrites: Ticket.slaStateJson, Ticket.riskScore, Ticket.riskReasonsJson, Ticket.slaDueAt, Ticket.slaBreached.\nTrigger points: on ticket created/ingested; on message events; on assignment change; on status change; periodic refresh for dashboard accuracy.",
+        "createdAt": "2026-06-14T11:40:49.023Z"
+      },
+      {
+        "id": "artifact_szna70vq",
+        "type": "review",
+        "title": "API contract: ticket SLA state endpoint",
+        "body": "Path: src/app/api/tickets/[id]/sla/route.ts\nGET returns TicketSlaState (UI explainability/debugging).\nPOST action 'recompute' returns TicketSlaState (manual refresh; future webhook trigger).",
+        "createdAt": "2026-06-14T11:40:49.023Z"
+      },
+      {
+        "id": "artifact_7lwqeu5a",
+        "type": "analysis",
+        "title": "Risk model spec: scoring formula + explainability",
+        "body": "Path: src/domain/sla/RiskModel.md\nBase from time ratio: ratio = 1 - (remainingWorkingMs/targetWorkingMs) clamped 0..1; base = ratio*70.\nBreach override: if breached => base >= 90; include ALREADY_BREACHED.\nAgent load: add up to 15 when load>0.8.\nBacklog: add up to 10 when queue>0.7.\nModifiers: UNASSIGNED +8; CHANNEL_LIVE_CHAT +6; CHANNEL_SOCIAL +4; STATUS_PENDING_CUSTOMER -10 (floor 0); STATUS_ON_HOLD -15 (floor 0); PRIORITY_P0_BOOST +8; PRIORITY_P1_BOOST +4.\nBands: 0-39 ok; 40-69 at_risk; 70-100 critical (display at_risk unless breached).\nExplainability: emit top 1-4 reasons by contribution magnitude, plus ALREADY_BREACHED when applicable.",
+        "createdAt": "2026-06-14T11:40:49.023Z"
+      },
+      {
+        "id": "artifact_3jm1b5uq",
+        "type": "summary",
+        "title": "Implementation details: dueAt computation + caching plan",
+        "body": "DueAt computation: forward business-hours accumulation from start timestamp; skip non-working hours/weekends; policy timezone boundaries; store timestamps in UTC ISO but compute windows in local tz.\nStart times: firstResponse from ticket.createdAt (or first inbound customer msg); nextResponse from last inbound customer msg after last agent reply (null if none pending); resolution from ticket.createdAt/first inbound (v1 no pause; PendingCustomer/OnHold only affect risk).\nEvent derivation: first response satisfied by first agent public reply; next response applies when customer last spoke and not terminal; satisfied by agent reply after customer msg; resolution satisfied on Resolved/Closed.\nCaching fields: slaDueAt, slaBreached, riskScore, riskReasonsJson, slaStateJson for fast list sorting/filtering.",
+        "createdAt": "2026-06-14T11:40:49.023Z"
+      },
+      {
+        "id": "artifact_3sfuhux2",
+        "type": "analysis",
+        "title": "Task 6: Escalation routing rules engine",
+        "body": "Status: conceptual-executed. Deterministic routing assigning to agent/queue/oncall/teamLead using priority, SLA riskScore, customerTier (mock), tags, and agent capacity; manual override actions; audit timeline events with inputs, selected rule, final assignment.",
+        "createdAt": "2026-06-14T11:41:38.947Z"
+      },
+      {
+        "id": "artifact_rvs47p8o",
+        "type": "execution",
+        "title": "Domain types and routing engine",
+        "body": "Types: RoutingInput, RoutingDecision (decisionId, ticketId, createdAt, policyVersion, inputsHash, ruleId, target, alternatives[], reasons[], deterministicSeed, overriddenByEventId?), RoutingTarget (agent|queue|oncall|teamLead), RoutingRule, RoutingPolicy, AgentCapacitySnapshot, ManualOverrideAction. Engine: routeTicket(input, policy, capacitySnapshot, priorDecisions); hashRoutingInputs(normalized priority,riskScore,customerTier,tags(sorted),channel,createdAtBucket(5m),ticketId); stablePickWeighted(candidates, seed). Logic: manual override precedence; ordered rule evaluation; capacity/skill filtering; deterministic weighted pick via HMAC(inputsHash, policy.salt); fallback to rule queue or default queue:triage; emit alternatives + reason codes.",
+        "createdAt": "2026-06-14T11:41:38.947Z"
+      },
+      {
+        "id": "artifact_tb5s4j3o",
+        "type": "execution",
+        "title": "Policy v1 + services, API, persistence, UI, audit events",
+        "body": "Policy (routing.v1): defaultQueueId queue:triage; queues triage/billing/bugs/outage/vip/oncall; rules R1 outage/P0->oncall(primary) fallback queue:outage; R2 enterprise & risk>=80->teamLead(support) fallback queue:vip; R3 billing->queue:billing then assign skill:billing; R4 bug->queue:bugs then assign skill:bugs; R5 risk 50-79->triage then assign skill:general; R6 risk<50->triage then assign any_active. Services: RouteTicketService loads ticket/tags/tier, capacity snapshot, runs engine, persists decision events + updates snapshot, idempotent via ticketId+inputsHash+policyVersion; ManualOverrideService emits ROUTING_OVERRIDE_APPLIED (and optional ROUTING_DECISION referencing override). API: POST /tickets/[ticketId]/route {mode auto|dryRun, policyVersion?, recomputeCapacity?} => {decision, applied}; POST /tickets/[ticketId]/route/override {action, target, reason, expiresAt?} => {overrideEventId, ticket}. Persistence: Ticket routing fields + Event types ROUTING_DECISION/OVERRIDE_APPLIED/OVERRIDE_CLEARED with payload (decisionId, inputsHash, ruleId, reasons, candidates, selectedTarget) and indexes. UI: timeline renderers for decision/override; routing actions + dry-run preview. Audit payload examples provided.",
+        "createdAt": "2026-06-14T11:41:38.947Z"
+      },
+      {
+        "id": "artifact_mt6d13ze",
+        "type": "analysis",
+        "title": "Summarizer port and DTO taxonomy",
+        "body": "Port: Summarizer.summarize(input, options) -> output with shortSummary, keyEntities (type/value/confidence), sentiment (label/score), recommendedResponseType, suggestedNextActions (action/rationale/confidence), suggestedEscalationReason, provider metadata, inputsHash, generatedAt.",
+        "createdAt": "2026-06-14T11:42:25.000Z"
+      },
+      {
+        "id": "artifact_eawdca9i",
+        "type": "analysis",
+        "title": "MockSummarizer behavior",
+        "body": "Deterministic heuristics: regex/dictionaries for entity extraction (invoice/order IDs, ERR_* codes, product/integrations/platform terms); lexicon-based sentiment scoring; response type selection (billing/troubleshooting/escalate/informational); escalation reason rules (SLA risk>=75/breached, outage, payment failure, enterprise, security); map to 2–4 next actions (e.g., request_info, collect_logs, reassign_specialist, page_oncall).",
+        "createdAt": "2026-06-14T11:42:25.000Z"
+      },
+      {
+        "id": "artifact_qxyxq6ge",
+        "type": "analysis",
+        "title": "Persistence design: TicketSummary model",
+        "body": "New model fields include ticketId, version (monotonic per ticket), inputsHash, providerName/model, promptVersion, summaryShort, entities/actions JSON, sentiment label/score, recommendedResponseType, suggestedEscalationReason, createdAt; constraints unique(ticketId, version) and optional unique(ticketId, inputsHash) for idempotency.",
+        "createdAt": "2026-06-14T11:42:25.000Z"
+      },
+      {
+        "id": "artifact_k4v1f1u1",
+        "type": "execution",
+        "title": "Use case + API flow",
+        "body": "SummarizeTicket loads ticket+recent events, canonicalizes inputs (limit last N message events), computes sha256 inputsHash, returns latest if unchanged unless force, otherwise generates and persists version+1; API GET /api/tickets/:ticketId/summary returns latest+history; POST triggers regeneration with optional dryRun; emits TICKET_SUMMARY_GENERATED audit event.",
+        "createdAt": "2026-06-14T11:42:25.000Z"
+      },
+      {
+        "id": "artifact_48o4lk28",
+        "type": "summary",
+        "title": "Files/modules impacted (design)",
+        "body": "src/domain/ai/Summarizer.ts; src/domain/ai/types.ts; src/application/ai/SummarizeTicket.ts; src/infra/ai/providers/mock/MockSummarizer.ts; src/infra/ai/providers/index.ts; src/config/aiPrompts.ts; prisma/schema.prisma (delta); src/infra/db/repositories/TicketSummaryRepositoryPrisma.ts; src/app/api/tickets/[ticketId]/summary/route.ts; src/domain/events/EventTypes.ts (delta).",
+        "createdAt": "2026-06-14T11:42:25.000Z"
+      }
+    ],
+    "logs": [
+      {
+        "id": "log_nm8h1hht",
+        "level": "success",
+        "message": "Mission plan generated successfully.",
+        "timestamp": "2026-06-14T11:30:42.675Z"
+      },
+      {
+        "id": "log_start_1781436941824",
+        "level": "info",
+        "message": "Mission execution started.",
+        "timestamp": "2026-06-14T11:35:41.824Z"
+      },
+      {
+        "id": "log_1781436941829_q4wixu",
+        "level": "info",
+        "message": "Starting task 1: Confirm personas, workflows, and SLA rules (Ops-first product spec)",
+        "timestamp": "2026-06-14T11:35:41.829Z"
+      },
+      {
+        "id": "log_stop_1781436957050",
+        "level": "warning",
+        "message": "Mission stop requested. The run will halt after the current task finishes.",
+        "timestamp": "2026-06-14T11:35:57.050Z"
+      },
+      {
+        "id": "log_x2djmg39",
+        "level": "info",
+        "message": "Defined 4 roles/personas with goals and default dashboard lenses.",
+        "timestamp": "2026-06-14T11:36:45.388Z"
+      },
+      {
+        "id": "log_9qbuo3d2",
+        "level": "info",
+        "message": "Specified ticket lifecycle states and event types for timeline UI and analytics.",
+        "timestamp": "2026-06-14T11:36:45.388Z"
+      },
+      {
+        "id": "log_ibt9auv1",
+        "level": "info",
+        "message": "Defined SLA timers, thresholds, applicability/pause rules, and v1 business-hours behavior.",
+        "timestamp": "2026-06-14T11:36:45.388Z"
+      },
+      {
+        "id": "log_qdrw9d8q",
+        "level": "info",
+        "message": "Defined KPI cards (risk, backlog aging, workload, escalation, SLA attainment) with role defaults.",
+        "timestamp": "2026-06-14T11:36:45.388Z"
+      },
+      {
+        "id": "log_82gx0tiz",
+        "level": "success",
+        "message": "Captured sample data entities, derived UI fields, and minimum seed scenarios for v1 demo.",
+        "timestamp": "2026-06-14T11:36:45.388Z"
+      },
+      {
+        "id": "log_1781437005418_8z8p8m",
+        "level": "success",
+        "message": "Completed task 1: Confirm personas, workflows, and SLA rules (Ops-first product spec)",
+        "timestamp": "2026-06-14T11:36:45.418Z"
+      },
+      {
+        "id": "log_1781437005421_6isyg9",
+        "level": "info",
+        "message": "Starting task 2: System architecture & folder structure (greenfield Next.js)",
+        "timestamp": "2026-06-14T11:36:45.421Z"
+      },
+      {
+        "id": "log_w4lj6u15",
+        "level": "info",
+        "message": "Defined v1 layering: domain, application, ports, infra (Prisma + mock connectors), API route handlers, UI dashboards/cards.",
+        "timestamp": "2026-06-14T11:37:30.160Z"
+      },
+      {
+        "id": "log_kjbn0xph",
+        "level": "success",
+        "message": "Selected SQLite + Prisma with migration-ready path to Postgres.",
+        "timestamp": "2026-06-14T11:37:30.160Z"
+      },
+      {
+        "id": "log_aaakx2jc",
+        "level": "info",
+        "message": "Proposed Next.js App Router folder structure with route groups per persona dashboard.",
+        "timestamp": "2026-06-14T11:37:30.160Z"
+      },
+      {
+        "id": "log_ivplfbv9",
+        "level": "info",
+        "message": "Outlined ports for repositories and Zendesk/Slack/Email connectors to keep domain persistence/integration agnostic.",
+        "timestamp": "2026-06-14T11:37:30.160Z"
+      },
+      {
+        "id": "log_lsixmpe6",
+        "level": "info",
+        "message": "Sketched initial API surface for inbox triage, SLA risk, routing, analytics, reports, and exports.",
+        "timestamp": "2026-06-14T11:37:30.160Z"
+      },
+      {
+        "id": "log_1781437050165_8lazqv",
+        "level": "success",
+        "message": "Completed task 2: System architecture & folder structure (greenfield Next.js)",
+        "timestamp": "2026-06-14T11:37:30.165Z"
+      },
+      {
+        "id": "log_1781437050172_2pk2xz",
+        "level": "info",
+        "message": "Starting task 3: Data model: tickets, events timeline, agents, channels, SLAs, escalations",
+        "timestamp": "2026-06-14T11:37:30.172Z"
+      },
+      {
+        "id": "log_9a4gpsdl",
+        "level": "info",
+        "message": "Defined domain types for Ticket, TicketEvent, SLAState/targets/timers, EscalationState/route, Agent, WorkloadSnapshot.",
+        "timestamp": "2026-06-14T11:38:21.253Z"
+      },
+      {
+        "id": "log_0aj8o37t",
+        "level": "info",
+        "message": "Added repository ports for Ticket, TicketEvent, Agent, WorkloadSnapshot to support hexagonal architecture and mock/Prisma adapters.",
+        "timestamp": "2026-06-14T11:38:21.253Z"
+      },
+      {
+        "id": "log_zau8d7qe",
+        "level": "info",
+        "message": "Created Prisma schema models with JSON-string fields for SQLite, indexes for ops filtering (status/priority/assignee/risk/dueAt).",
+        "timestamp": "2026-06-14T11:38:21.253Z"
+      },
+      {
+        "id": "log_202t5gj5",
+        "level": "info",
+        "message": "Ensured event timeline ordering via unique(ticketId, version) and included idempotencyKey for integration-ready ingestion.",
+        "timestamp": "2026-06-14T11:38:21.253Z"
+      },
+      {
+        "id": "log_ctjcs15a",
+        "level": "success",
+        "message": "Task completed: Data model and persistence schema defined and ready for Prisma adapter implementation.",
+        "timestamp": "2026-06-14T11:38:21.253Z"
+      },
+      {
+        "id": "log_1781437101260_i5qvrk",
+        "level": "success",
+        "message": "Completed task 3: Data model: tickets, events timeline, agents, channels, SLAs, escalations",
+        "timestamp": "2026-06-14T11:38:21.260Z"
+      },
+      {
+        "id": "log_1781437101267_rrczm9",
+        "level": "info",
+        "message": "Starting task 4: Local persistence + seed generator (realistic sample workload)",
+        "timestamp": "2026-06-14T11:38:21.267Z"
+      },
+      {
+        "id": "log_cjbjgx3g",
+        "level": "info",
+        "message": "Planned SQLite+Prisma persistence with transactional Ticket+TicketEvent writes and indexed fields for dashboard filtering.",
+        "timestamp": "2026-06-14T11:39:10.578Z"
+      },
+      {
+        "id": "log_g0q2jd9s",
+        "level": "info",
+        "message": "Planned deterministic seed generator (SEED env var, stable IDs) to create realistic omnichannel workload with targeted SLA near-breach/breach cases.",
+        "timestamp": "2026-06-14T11:39:10.578Z"
+      },
+      {
+        "id": "log_ayizdci7",
+        "level": "success",
+        "message": "Conceptual validation: ensured coverage for unassigned P1, first-response breached, next-response near-breach, resolve breached, and paused-SLA pending cases; timelines and agent load variation checked.",
+        "timestamp": "2026-06-14T11:39:10.578Z"
+      },
+      {
+        "id": "log_1781437150590_ig95wq",
+        "level": "success",
+        "message": "Completed task 4: Local persistence + seed generator (realistic sample workload)",
+        "timestamp": "2026-06-14T11:39:10.590Z"
+      },
+      {
+        "id": "log_1781437150598_iewu21",
+        "level": "info",
+        "message": "Starting task 5: Mock integration adapters (Zendesk/Slack/Email) with production-ready interfaces",
+        "timestamp": "2026-06-14T11:39:10.598Z"
+      },
+      {
+        "id": "log_xljkv3u6",
+        "level": "info",
+        "message": "Defined ports for ticket sources, notifications, config repository, and secrets provider to enable adapter-only swapping.",
+        "timestamp": "2026-06-14T11:40:01.236Z"
+      },
+      {
+        "id": "log_hkcml4nb",
+        "level": "success",
+        "message": "Designed IngestTicketsService with cursor-based at-least-once ingest and idempotent event deduplication.",
+        "timestamp": "2026-06-14T11:40:01.236Z"
+      },
+      {
+        "id": "log_l5y6d71m",
+        "level": "success",
+        "message": "Implemented mock Zendesk ticket source backed by Prisma-seeded data with deterministic listChanges/fetch/ack and health checks.",
+        "timestamp": "2026-06-14T11:40:01.236Z"
+      },
+      {
+        "id": "log_rwplg5z0",
+        "level": "success",
+        "message": "Implemented mock Slack and Email notification adapters writing to NotificationOutbox with correlation IDs and future-ready payload shapes.",
+        "timestamp": "2026-06-14T11:40:01.236Z"
+      },
+      {
+        "id": "log_3cn4egre",
+        "level": "info",
+        "message": "Added IntegrationRegistry to resolve mock vs prod adapters and fail fast on missing secrets in prod mode.",
+        "timestamp": "2026-06-14T11:40:01.236Z"
+      },
+      {
+        "id": "log_4vkb0luf",
+        "level": "success",
+        "message": "Exposed POST /api/ingest to trigger ingest runs and return per-integration results plus totals for ops dashboards.",
+        "timestamp": "2026-06-14T11:40:01.236Z"
+      },
+      {
+        "id": "log_1781437201240_l5hxtx",
+        "level": "success",
+        "message": "Completed task 5: Mock integration adapters (Zendesk/Slack/Email) with production-ready interfaces",
+        "timestamp": "2026-06-14T11:40:01.240Z"
+      },
+      {
+        "id": "log_1781437201250_c6zy9u",
+        "level": "info",
+        "message": "Starting task 6: SLA engine (timers, business hours v1, breach + risk scoring)",
+        "timestamp": "2026-06-14T11:40:01.250Z"
+      },
+      {
+        "id": "log_1o6elbxa",
+        "level": "info",
+        "message": "Defined business-hours v1 policy and pure SLA computation interface (dueAt/remainingMs) with modular hooks for v2 holidays/pause rules.",
+        "timestamp": "2026-06-14T11:40:49.023Z"
+      },
+      {
+        "id": "log_q33i1eig",
+        "level": "info",
+        "message": "Defined 0-100 risk scoring formula combining time-to-due, backlog/agent load, and status/channel modifiers; added reason codes for UI explainability.",
+        "timestamp": "2026-06-14T11:40:49.023Z"
+      },
+      {
+        "id": "log_jkq6kbu0",
+        "level": "info",
+        "message": "Planned ticket snapshot caching fields for fast ops list sorting/filtering; recompute triggers defined.",
+        "timestamp": "2026-06-14T11:40:49.023Z"
+      },
+      {
+        "id": "log_637j1lor",
+        "level": "success",
+        "message": "Provided sample TicketSlaState output showing timers, soonest dueAt, and risk score/reasons.",
+        "timestamp": "2026-06-14T11:40:49.023Z"
+      },
+      {
+        "id": "log_1781437249029_9p46w3",
+        "level": "success",
+        "message": "Completed task 6: SLA engine (timers, business hours v1, breach + risk scoring)",
+        "timestamp": "2026-06-14T11:40:49.029Z"
+      },
+      {
+        "id": "log_1781437249060_3bt9fe",
+        "level": "info",
+        "message": "Starting task 7: Escalation routing rules engine (team lead / on-call / specialized queues)",
+        "timestamp": "2026-06-14T11:40:49.060Z"
+      },
+      {
+        "id": "log_qgs3rad2",
+        "level": "info",
+        "message": "Routing engine spec created: deterministic input hashing + seeded tie-break + capacity filtering.",
+        "timestamp": "2026-06-14T11:41:38.947Z"
+      },
+      {
+        "id": "log_jmwzp8kn",
+        "level": "info",
+        "message": "Policy v1 drafted with 6 ordered rules covering outage/oncall, enterprise escalation, and specialist queues.",
+        "timestamp": "2026-06-14T11:41:38.947Z"
+      },
+      {
+        "id": "log_555a8yy8",
+        "level": "info",
+        "message": "Audit events defined for routing decisions and overrides; idempotency via inputsHash.",
+        "timestamp": "2026-06-14T11:41:38.947Z"
+      },
+      {
+        "id": "log_1781437298950_f744a9",
+        "level": "success",
+        "message": "Completed task 7: Escalation routing rules engine (team lead / on-call / specialized queues)",
+        "timestamp": "2026-06-14T11:41:38.950Z"
+      },
+      {
+        "id": "log_1781437298957_q3hlgr",
+        "level": "info",
+        "message": "Starting task 8: AI ticket summaries (mock LLM now, pluggable later) + suggested next actions",
+        "timestamp": "2026-06-14T11:41:38.957Z"
+      },
+      {
+        "id": "log_92lfcuus",
+        "level": "success",
+        "message": "Defined Summarizer port, DTO taxonomy, and provider metadata to support mock now and LLM later.",
+        "timestamp": "2026-06-14T11:42:25.000Z"
+      },
+      {
+        "id": "log_48a01f1c",
+        "level": "info",
+        "message": "Specified deterministic mock summarizer heuristics and centralized prompt/config with versioning.",
+        "timestamp": "2026-06-14T11:42:25.000Z"
+      },
+      {
+        "id": "log_qqi0oty6",
+        "level": "info",
+        "message": "Designed versioned persistence model (TicketSummary) with inputsHash-based idempotency and indexing.",
+        "timestamp": "2026-06-14T11:42:25.000Z"
+      },
+      {
+        "id": "log_ilam5lpi",
+        "level": "info",
+        "message": "Specified API surface: GET latest+history; POST generate/refresh with force/maxEvents/dryRun.",
+        "timestamp": "2026-06-14T11:42:25.000Z"
+      },
+      {
+        "id": "log_zgmd10fq",
+        "level": "info",
+        "message": "Added timeline audit event type TICKET_SUMMARY_GENERATED for visibility.",
+        "timestamp": "2026-06-14T11:42:25.000Z"
+      },
+      {
+        "id": "log_1781437345003_p8w4b9",
+        "level": "success",
+        "message": "Completed task 8: AI ticket summaries (mock LLM now, pluggable later) + suggested next actions",
+        "timestamp": "2026-06-14T11:42:25.003Z"
+      },
+      {
+        "id": "log_1781437398620_zdqy7r",
+        "level": "success",
+        "message": "Mission completed successfully.",
+        "timestamp": "2026-06-14T11:43:18.620Z"
+      }
+    ],
+    "createdAt": "2026-06-14T11:30:05.414Z",
+    "updatedAt": "2026-06-14T11:43:18.620Z",
+    "documents": {
+      "prd": {
+        "kind": "prd",
+        "title": "Product Requirements Document",
+        "body": "# Product Requirements Document: Customer Support Operations Command Center (Codex Mission Control)\n\n## Product Vision\nBuild a customer support operations command center with omnichannel inbox triage, SLA breach prediction, AI ticket summaries, escalation routing, agent workload analytics, and executive health reports.\n\n## Problem Statement\nTeams lose execution context between idea, architecture, planning, and handoff. This mission turns the idea into a shared system of record.\n\n## Target Users\n- Founders validating an MVP\n- Product managers preparing requirements\n- Engineering leads preparing implementation plans\n- AI-native teams handing context to Codex or other tools\n\n## User Personas\n- Product Lead: needs a crisp PRD and success criteria.\n- Engineering Lead: needs architecture, risks, and task sequencing.\n- Builder: needs enough context to execute without re-asking basic questions.\n\n## User Stories\n- As a team member, I need confirm personas, workflows, and sla rules (ops-first product spec) so that Define role-specific goals and primary flows for Support Agent, Team Lead, Ops Manager, and Executive. Specify ticket lifecycle states, SLA definitions (first response, next response, resolution), breach thresholds, business hours handling (simple v1), priority mapping, and the set of KPIs for dashboards (risk queue, backlog aging, workload, escalation rate, SLA attainment). Output a short spec plus sample data requirements to drive UI and prediction logic.\n- As a team member, I need system architecture & folder structure (greenfield next.js) so that Set up Next.js (App Router) conventions: /app routes, /app/api endpoints, /lib domain modules, /components UI, /types. Decide local persistence approach (SQLite with Prisma or file-based JSON store) and define boundaries: domain layer (tickets, sla, routing, analytics), service layer (mock connectors), API layer, UI. Ensure architecture is integration-ready with adapter interfaces for Zendesk/Slack/Email.\n- As a team member, I need data model: tickets, events timeline, agents, channels, slas, escalations so that Design core entities: Ticket (id, subject, channel, requester, status, priority, tags), TicketEvent (timestamp, type, actor, payload), SLAState (targets, dueAt, breached flags), Escalation (reason, route, owner), Agent (skills, capacity, timezone), WorkloadSnapshot. Implement TypeScript types and persistence schema. Include event-sourcing-ish timeline to power auditability and exports.\n- As a team member, I need local persistence + seed generator (realistic sample workload) so that Implement local persistence layer with CRUD for tickets and events, plus a deterministic seed script that creates multi-channel tickets with varying age, priority, statuses, and SLA timers. Include agents and capacity settings. Seed data should intentionally include near-breach and breached cases to validate the risk UI.\n- As a team member, I need mock integration adapters (zendesk/slack/email) with production-ready interfaces so that Create connector interfaces (e.g., TicketSourceAdapter, NotificationAdapter) and implement mocked adapters that read/write local persistence. Include stubs for future OAuth secrets/config. Provide a unified ingest pathway so that swapping to real Zendesk/Slack/email later is limited to adapter implementations.\n- As a team member, I need sla engine (timers, business hours v1, breach + risk scoring) so that Implement SLA computation that derives dueAt for first response/next response/resolution based on priority and business hours policy (v1: configurable working hours, skip weekends; keep logic modular). Add risk scoring (0-100) using time-to-due ratio, backlog/agent load factor, and status/channel modifiers. Output per-ticket SLAState and riskReason codes for UI explainability.\n- As a team member, I need escalation routing rules engine (team lead / on-call / specialized queues) so that Implement routing that assigns tickets to agents or escalation queues based on: priority, risk score, customer tier (mock), tags (billing/bug/outage), and current agent capacity. Provide deterministic routing for repeatability plus override actions (manual escalate, reassign). Track routing decisions as timeline events for audit.\n- As a team member, I need ai ticket summaries (mock llm now, pluggable later) + suggested next actions so that Create a summarization service interface (Summarizer) with a mocked implementation that produces: short summary, key entities, sentiment, recommended response type, and suggested escalation reason. Store summaries with versioning and timestamps. Ensure later swap to real LLM is confined to provider module; keep prompts/config centralized.\n\n## Functional Requirements\n1. Confirm personas, workflows, and SLA rules (Ops-first product spec): Define role-specific goals and primary flows for Support Agent, Team Lead, Ops Manager, and Executive. Specify ticket lifecycle states, SLA definitions (first response, next response, resolution), breach thresholds, business hours handling (simple v1), priority mapping, and the set of KPIs for dashboards (risk queue, backlog aging, workload, escalation rate, SLA attainment). Output a short spec plus sample data requirements to drive UI and prediction logic.\n2. System architecture & folder structure (greenfield Next.js): Set up Next.js (App Router) conventions: /app routes, /app/api endpoints, /lib domain modules, /components UI, /types. Decide local persistence approach (SQLite with Prisma or file-based JSON store) and define boundaries: domain layer (tickets, sla, routing, analytics), service layer (mock connectors), API layer, UI. Ensure architecture is integration-ready with adapter interfaces for Zendesk/Slack/Email.\n3. Data model: tickets, events timeline, agents, channels, SLAs, escalations: Design core entities: Ticket (id, subject, channel, requester, status, priority, tags), TicketEvent (timestamp, type, actor, payload), SLAState (targets, dueAt, breached flags), Escalation (reason, route, owner), Agent (skills, capacity, timezone), WorkloadSnapshot. Implement TypeScript types and persistence schema. Include event-sourcing-ish timeline to power auditability and exports.\n4. Local persistence + seed generator (realistic sample workload): Implement local persistence layer with CRUD for tickets and events, plus a deterministic seed script that creates multi-channel tickets with varying age, priority, statuses, and SLA timers. Include agents and capacity settings. Seed data should intentionally include near-breach and breached cases to validate the risk UI.\n5. Mock integration adapters (Zendesk/Slack/Email) with production-ready interfaces: Create connector interfaces (e.g., TicketSourceAdapter, NotificationAdapter) and implement mocked adapters that read/write local persistence. Include stubs for future OAuth secrets/config. Provide a unified ingest pathway so that swapping to real Zendesk/Slack/email later is limited to adapter implementations.\n6. SLA engine (timers, business hours v1, breach + risk scoring): Implement SLA computation that derives dueAt for first response/next response/resolution based on priority and business hours policy (v1: configurable working hours, skip weekends; keep logic modular). Add risk scoring (0-100) using time-to-due ratio, backlog/agent load factor, and status/channel modifiers. Output per-ticket SLAState and riskReason codes for UI explainability.\n7. Escalation routing rules engine (team lead / on-call / specialized queues): Implement routing that assigns tickets to agents or escalation queues based on: priority, risk score, customer tier (mock), tags (billing/bug/outage), and current agent capacity. Provide deterministic routing for repeatability plus override actions (manual escalate, reassign). Track routing decisions as timeline events for audit.\n8. AI ticket summaries (mock LLM now, pluggable later) + suggested next actions: Create a summarization service interface (Summarizer) with a mocked implementation that produces: short summary, key entities, sentiment, recommended response type, and suggested escalation reason. Store summaries with versioning and timestamps. Ensure later swap to real LLM is confined to provider module; keep prompts/config centralized.\n\n## Non Functional Requirements\n- Reliable loading and error states\n- Server-side secret handling\n- Clear audit trail\n- Reusable mission context\n\n## Success Metrics\n- Mission can be understood in under 2 minutes\n- PRD/TDD/plan/AI pack can be exported\n- Risks and dependencies are visible\n- Next execution steps are obvious\n\n## Risks\n- Scope can expand quickly if integrations, auth, or real-time collaboration are added too early.\n- Demo quality depends on seeded data and deterministic empty/loading states.\n- AI features need graceful fallback when provider latency or configuration fails.\n\n## Assumptions\n- MVP scope is prioritized over integrations\n- Seeded/demo data is acceptable for hackathon validation\n- Execution happens in external tools after context is prepared\n\n## Future Scope\n- Team collaboration\n- Mission comparison\n- Reusable architecture templates\n- Deeper integrations with project management tools",
+        "generatedAt": "2026-06-14T11:34:37.684Z"
+      },
+      "engineering-plan": {
+        "kind": "engineering-plan",
+        "title": "Engineering Execution Plan",
+        "body": "# Engineering Execution Plan: Customer Support Operations Command Center (Codex Mission Control)\n\n## Epics\n- Mission intake and planning\n- Execution intelligence dashboard\n- Document Studio\n- Traceability and decision system\n- Mission memory\n\n## Features\n- Create mission\n- Run/stop execution\n- Generate PRD/TDD/engineering plan/AI pack\n- View diagrams\n- Duplicate mission\n\n## Stories\n- As an execution lead, I can review confirm personas, workflows, and sla rules (ops-first product spec) so the mission can move forward with clarity.\n- As an execution lead, I can review system architecture & folder structure (greenfield next.js) so the mission can move forward with clarity.\n- As an execution lead, I can review data model: tickets, events timeline, agents, channels, slas, escalations so the mission can move forward with clarity.\n- As an execution lead, I can review local persistence + seed generator (realistic sample workload) so the mission can move forward with clarity.\n- As an execution lead, I can review mock integration adapters (zendesk/slack/email) with production-ready interfaces so the mission can move forward with clarity.\n- As an execution lead, I can review sla engine (timers, business hours v1, breach + risk scoring) so the mission can move forward with clarity.\n- As an execution lead, I can review escalation routing rules engine (team lead / on-call / specialized queues) so the mission can move forward with clarity.\n- As an execution lead, I can review ai ticket summaries (mock llm now, pluggable later) + suggested next actions so the mission can move forward with clarity.\n\n## Tasks\n1. Confirm personas, workflows, and SLA rules (Ops-first product spec): Define role-specific goals and primary flows for Support Agent, Team Lead, Ops Manager, and Executive. Specify ticket lifecycle states, SLA definitions (first response, next response, resolution), breach thresholds, business hours handling (simple v1), priority mapping, and the set of KPIs for dashboards (risk queue, backlog aging, workload, escalation rate, SLA attainment). Output a short spec plus sample data requirements to drive UI and prediction logic.\n2. System architecture & folder structure (greenfield Next.js): Set up Next.js (App Router) conventions: /app routes, /app/api endpoints, /lib domain modules, /components UI, /types. Decide local persistence approach (SQLite with Prisma or file-based JSON store) and define boundaries: domain layer (tickets, sla, routing, analytics), service layer (mock connectors), API layer, UI. Ensure architecture is integration-ready with adapter interfaces for Zendesk/Slack/Email.\n3. Data model: tickets, events timeline, agents, channels, SLAs, escalations: Design core entities: Ticket (id, subject, channel, requester, status, priority, tags), TicketEvent (timestamp, type, actor, payload), SLAState (targets, dueAt, breached flags), Escalation (reason, route, owner), Agent (skills, capacity, timezone), WorkloadSnapshot. Implement TypeScript types and persistence schema. Include event-sourcing-ish timeline to power auditability and exports.\n4. Local persistence + seed generator (realistic sample workload): Implement local persistence layer with CRUD for tickets and events, plus a deterministic seed script that creates multi-channel tickets with varying age, priority, statuses, and SLA timers. Include agents and capacity settings. Seed data should intentionally include near-breach and breached cases to validate the risk UI.\n5. Mock integration adapters (Zendesk/Slack/Email) with production-ready interfaces: Create connector interfaces (e.g., TicketSourceAdapter, NotificationAdapter) and implement mocked adapters that read/write local persistence. Include stubs for future OAuth secrets/config. Provide a unified ingest pathway so that swapping to real Zendesk/Slack/email later is limited to adapter implementations.\n6. SLA engine (timers, business hours v1, breach + risk scoring): Implement SLA computation that derives dueAt for first response/next response/resolution based on priority and business hours policy (v1: configurable working hours, skip weekends; keep logic modular). Add risk scoring (0-100) using time-to-due ratio, backlog/agent load factor, and status/channel modifiers. Output per-ticket SLAState and riskReason codes for UI explainability.\n7. Escalation routing rules engine (team lead / on-call / specialized queues): Implement routing that assigns tickets to agents or escalation queues based on: priority, risk score, customer tier (mock), tags (billing/bug/outage), and current agent capacity. Provide deterministic routing for repeatability plus override actions (manual escalate, reassign). Track routing decisions as timeline events for audit.\n8. AI ticket summaries (mock LLM now, pluggable later) + suggested next actions: Create a summarization service interface (Summarizer) with a mocked implementation that produces: short summary, key entities, sentiment, recommended response type, and suggested escalation reason. Store summaries with versioning and timestamps. Ensure later swap to real LLM is confined to provider module; keep prompts/config centralized.\n\n## Dependencies\n- System architecture & folder structure (greenfield Next.js) depends on 1 prior task(s).\n- Data model: tickets, events timeline, agents, channels, SLAs, escalations depends on 1 prior task(s).\n- Local persistence + seed generator (realistic sample workload) depends on 1 prior task(s).\n- Mock integration adapters (Zendesk/Slack/Email) with production-ready interfaces depends on 2 prior task(s).\n- SLA engine (timers, business hours v1, breach + risk scoring) depends on 3 prior task(s).\n- Escalation routing rules engine (team lead / on-call / specialized queues) depends on 2 prior task(s).\n- AI ticket summaries (mock LLM now, pluggable later) + suggested next actions depends on 2 prior task(s).\n\n## Risks\n- Scope can expand quickly if integrations, auth, or real-time collaboration are added too early.\n- Demo quality depends on seeded data and deterministic empty/loading states.\n- AI features need graceful fallback when provider latency or configuration fails.\n\n## Estimates\n- MVP polish: 4-6 hours\n- Document generation hardening: 2-3 hours\n- Diagram and analytics pass: 3-4 hours\n- Demo rehearsal and bug fixes: 1-2 hours",
+        "generatedAt": "2026-06-14T11:35:04.877Z"
+      }
+    },
+    "summary": {
+      "outcome": "Completed ops-first spec and production-oriented greenfield architecture for a customer support operations command center with mock omnichannel ingest, specified v1 SLA/routing engines, and a pluggable AI ticket summarization design, emphasizing event-sourced auditability with cached snapshots for fast dashboards.",
+      "risks": [
+        "SLA pause/applicability rules vary by org/tool and may mismatch expectations.",
+        "Business-hours v1 is simplified (single schedule, no holidays) and may misrepresent global teams.",
+        "Timezone/DST sensitivity in business-hours arithmetic can skew dueAt calculations.",
+        "Priority auto-mapping heuristics may introduce noisy escalations; needs careful defaults and overrides with audit.",
+        "Rule-based risk scoring may be distrusted without strong explainability (reason codes, time-to-breach).",
+        "Domain logic may become coupled to Prisma/Next.js if boundaries aren’t enforced.",
+        "Event payload JSON can become a dumping ground, loosely typed, and hard to query without validation/versioning.",
+        "Snapshot/cached SLA/risk state may drift from event-derived truth if recomputation/reconciliation fails.",
+        "JSON-as-string columns reduce queryability and can cause parse/serialization runtime errors without strict schemas.",
+        "Idempotency gaps (especially email lacking stable IDs) can create duplicate events and inflated metrics.",
+        "Provider cursor semantics differ (Zendesk/Slack/Email), increasing adapter complexity without strict port contracts.",
+        "Secrets could leak into the database without enforced secrets isolation.",
+        "Next-response timer derivation may be wrong if event taxonomy differs across channels and isn’t normalized.",
+        "Cached SLA/risk fields can become stale without periodic refresh or on-read invalidation.",
+        "Capacity snapshot churn can cause routing flaps without cooldown/debounce controls.",
+        "Rule conflicts can produce surprising outcomes without ordering, transparency, and policy linting tests.",
+        "Manual overrides can hide auto-routing insights without tracking, reasons, and metrics.",
+        "Mock summarizer behavior may diverge from future LLM behavior, causing expectation mismatch without locked taxonomy/versioning.",
+        "Summary regeneration can spam versions on minor changes without canonicalization and inputsHash idempotency.",
+        "Entity extraction inaccuracies can reduce trust without confidence signals and UI framing as hints.",
+        "Risk of overbuilding connectors/adapters before validating product value."
+      ],
+      "nextSteps": [
+        "Implement SLA computation end-to-end: compute dueAt/remaining, persist TicketSlaState, and recompute transactionally on event append.",
+        "Implement routing engine runtime: execute Policy v1, write assignment/escalation events, and emit notifications via NotificationOutbox.",
+        "Build core UI flows: omnichannel inbox triage, ticket timeline, SLA widgets with risk reasons, and summary panel with history/regenerate.",
+        "Add reconciliation and tests: golden SLA cases across business-hours/DST edges, routing determinism tests, and event→snapshot consistency checks.",
+        "Harden integration boundaries: secrets isolation via IntegrationSecretsProvider, standardized adapter event taxonomy, and payload schema validation/versioning.",
+        "Introduce background jobs: scheduled ingest runner, periodic SLA/risk refresh, and nightly snapshot rebuild from events."
+      ],
+      "techStack": [
+        "Next.js (App Router)",
+        "TypeScript",
+        "SQLite",
+        "Prisma",
+        "Hexagonal architecture (domain/application/ports/infra)"
+      ],
+      "fileStructure": [
+        "app/(dashboards)/[persona]/(routes for inbox, ticket detail, analytics, exec reports)",
+        "app/api/v1/(tickets, events, triage, routing, sla-risk, analytics, reports, exports)",
+        "app/api/ingest (unified ingest endpoint)",
+        "src/domain/(entities, value-objects, events, policies)",
+        "src/application/(use-cases, services: SLA engine, routing engine, summarization orchestration)",
+        "src/ports/(repositories, integrations, notifications, summarizer, secrets provider)",
+        "src/infra/(prisma adapters, sqlite, integration adapters: zendesk/slack/email, registries)",
+        "prisma/schema.prisma",
+        "prisma/seed (deterministic seed generator)",
+        "src/jobs/(ingest runner, sla refresh, snapshot rebuild)"
+      ],
+      "database": "SQLite via Prisma; event-stream as source of truth with operational ticket snapshots and cached SLA/escalation state for dashboard performance.",
+      "tables": [
+        "Ticket",
+        "TicketEvent",
+        "Agent",
+        "Channel",
+        "SlaPolicy",
+        "TicketSlaState",
+        "EscalationPolicy",
+        "RoutingDecision",
+        "TicketSummary",
+        "IntegrationConnection",
+        "IntegrationCursor",
+        "NotificationOutbox",
+        "WorkloadSnapshot",
+        "Settings"
+      ],
+      "bestPractices": [
+        "Event timeline as source of truth; keep operational snapshots as derived cache for filtering/dashboards.",
+        "Use hexagonal boundaries to isolate domain logic from framework/persistence concerns.",
+        "Ensure deterministic behavior (seeded selection, inputsHash idempotency) for reproducibility and auditability.",
+        "Make risk scoring and routing explainable (reason codes + audit-grade events).",
+        "Recompute snapshots/SLA state transactionally on event append; add nightly reconciliation rebuild from events.",
+        "Validate and version event payloads at the app boundary (constructors + schema validation such as Zod).",
+        "Keep cursor opaque per adapter and enforce minimal port contracts (listChanges/ack).",
+        "Prevent secret leakage: keep tokens out of DB metadata and require a secrets provider with prod-mode validation.",
+        "Plan for queryability: index scalar fields now; normalize JSON-string fields into join tables when scaling beyond SQLite.",
+        "Add routing cooldown/debounce and track manual overrides with reasons and metrics.",
+        "Centralize summarizer prompts/config and store providerName/model/promptVersion for auditability."
+      ],
+      "executionContextPath": [
+        "mission: Customer Support Operations Command Center (Codex Mission Control)",
+        "status: completed (spec + architecture delivered; some runtime implementations remain)",
+        "core concepts: event-sourced ticket timeline + cached Ticket snapshot; deterministic idempotent operations via inputsHash; explainable reason codes",
+        "capabilities: mock omnichannel ingest (Zendesk/Slack/Email) with cursors + dedupe; specified v1 SLA engine; specified v1 routing policy engine; pluggable AI summaries with versioned persistence",
+        "seed data: deterministic generator producing ~120 tickets and ~700–1100 events including near-breach/breached SLA scenarios",
+        "key APIs: /api/ingest; v1 surface for tickets/events/triage/routing/sla-risk/analytics/reports/exports; summaries GET history + POST regenerate",
+        "integration boundaries: IntegrationRegistry (mock/prod switch), IntegrationSecretsProvider, NotificationOutbox for alerts"
+      ]
+    }
+  },
+  {
     "id": "mission_evlubarx",
     "title": "Codex Mission Control: MCP Server + Next.js Control Plane + Antigravity Integration",
     "objective": "Design an MCP server that exposes project, task, documentation, and execution-context tools, then integrate it with Antigravity so users can inspect repositories, trigger mission workflows, retrieve generated PRDs and technical designs, and preserve execution memory across AI coding sessions.",
